@@ -80,11 +80,12 @@ app.post("/submitForm", function(req,res) {
 
         }else{                                                //return result
             console.log(`Finished parsing form --> nVal: ${wordIndex.nVal}\tuniqueWords: ${wordIndex.uniqueWordCount}\n`)
+            res.writeHead(200, { Connection: 'close', "Content-Type": "application/json" });
             res.end(JSON.stringify(wordIndex.getMostFrequentN()))
         }
     });
 
-    //Pipe the post request to busboy
+    //Pipe the POST request to busboy
     req.pipe(bb);
 })
 
