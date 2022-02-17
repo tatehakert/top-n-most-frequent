@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top N Most Frequent</title>
+    <style>#form-container{max-width: 30rem;}</style>
 </head>
-<body>
-    <form action="submitForm" method="post" enctype="multipart/form-data">
-        <input type="file" name="filetoupload" id="fileInput" class="form-control">
-        <input type="number" name="nVal" id="nValInput" class="form-control">
-        <input type="submit" value="Submit">
-    </form>
+
+<body class="bg-light">
+    <div class="container d-flex flex-column justify-content-center align-items-center my-4">
+        <h1 class="border-bottom">Top N Most Frequent Words in a File:</h1>
+        <div class="my-4 border rounded shadow shadow-lg p-4 bg-white" id="form-container">
+            <form action="submitForm" method="post" enctype="multipart/form-data" class="text-left">
+                <div class="mb-2">
+                    <label for="fileInput">File:</label>
+                    <input type="file" name="filetoupload" id="fileInput" class="form-control">
+                </div>
+                <div class="mb-2">
+                    <label for="nValInput">N value:</label>
+                    <input type="number" name="nVal" id="nValInput" class="form-control">
+                </div>
+                
+                <input type="submit" value="Submit" class="btn btn-primary mt-3 w-100">
+            </form>
+        </div>
+    </div>
 </body>
+
 </html>
