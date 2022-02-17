@@ -1,0 +1,14 @@
+{
+  "name": "top-n-most-frequent",
+  "version": "1.0.0",
+  "description": "Node API that accepts a text file and an integer N and returns the top N most frequent words and their frequencies",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tate Hakert",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
