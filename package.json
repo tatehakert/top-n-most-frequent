@@ -9,6 +9,7 @@
   "author": "Tate Hakert",
   "license": "ISC",
   "dependencies": {
+    "busboy": "^1.4.0",
     "express": "^4.17.3"
   }
 }
