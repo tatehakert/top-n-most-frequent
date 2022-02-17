@@ -13,6 +13,7 @@ app.get('/', function(req, res){
     res.sendFile(path.join(__dirname+"/uploadForm.html"))
 })
 
+
 /*-------- POST: "/submitForm" ---------   
 --> accepts a form containing a text file (filetoupload) and a number (nVal)
 --> returns the top N most freqent words from the file in JSON format */

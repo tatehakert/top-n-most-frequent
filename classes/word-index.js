@@ -16,7 +16,9 @@ class WordIndex{
         let wordArray = newLinesReplaced.split(" ")           //split the string into an array of words on " "
         
         wordArray.forEach((word) => {
+            //format the word by removing all non-alphanumeric characters --> toLowerCase()
             let formattedWord = word.replace(/[^A-Za-z0-9]/g, "").toLowerCase();
+
             if(formattedWord !== ""){               //ignore empty strings 
                 if(formattedWord in this.dict){ 
                     this.dict[formattedWord]++      //if word is in the index --> increment it's count
