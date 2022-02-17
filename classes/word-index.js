@@ -29,7 +29,20 @@ class WordIndex{
     }
 
     getMostFrequentN(){
-        return{"frequencies": []}
+        let result = {}
+        let frequencies = []
+
+        Object.keys(this.dict).map((key) => {
+            frequencies.push({"word": key, "count": this.dict[key]})
+        })
+
+        result["frequencies"] = frequencies.sort((a,b) => {
+            if(a["count"] == b["count"]){ return a["word"] > b["word"] ? 1 : -1 }   //if counts are equal, sort alphabetically 
+            return b["count"] - a["count"]                                          //otherwise, sort by count decending
+        })
+
+        result["frequencies"] = result["frequencies"].slice(0,this.nVal)
+        return result
     }
 
 }
