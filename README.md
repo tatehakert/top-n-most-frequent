@@ -17,7 +17,8 @@ This project has been tested with Node v15.0.1
 ## Configure app
 
 The app comes pre-configured, but the following paramaters can be updated for further testing:
-    - maxMB (top of index.js file) --> limits the maximum allowed file size
+
+    maxMB (top of index.js file) --> limits the maximum allowed file size
 
 ## Running the project
 From within the project folder, run:
