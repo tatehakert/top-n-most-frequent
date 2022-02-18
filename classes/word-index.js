@@ -6,7 +6,6 @@ class WordIndex{
         this.dict = {}
         this.nVal = 1
         this.uniqueWordCount = 0
-        this.mostFrequent = []
     }
 
     setN(n){
@@ -29,14 +28,6 @@ class WordIndex{
             this.addWordToIndex(stringHelper.formatWord(word))
         })
     }
-
-    // processString3(string){
-    //     string = stringHelper.replaceNewLines(string)
-
-    //     stringHelper.splitIntoWordArray(string).forEach((word) => {
-    //         this.addWordToIndex(stringHelper.formatWord(word))
-    //     })
-    // }
 
     getMostFrequentN(){
         let result = { "frequencies": [] }

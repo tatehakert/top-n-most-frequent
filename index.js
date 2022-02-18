@@ -5,7 +5,8 @@ const path = require('path');
 const WordIndex = require('./classes/word-index');
 const BufferManager = require('./classes/buffer-manager');
 
-const portNumber = 8080;   
+const portNumber = 8080;
+const maxMB = 1024;   
 
 /*-------- GET: "/" ---------   
 --> returns a html file with a form to upload the file */
@@ -28,7 +29,6 @@ app.post("/submitForm", function(req,res) {
     //  - BufferManager also keeps track of words that overflow between chunks to prevent indexing partial words
     let bufferManager = new BufferManager();
 
-    let maxMB = 1024;
     let maxFileBytes = maxMB*1024*1024;
 
     const bb = busboy({
