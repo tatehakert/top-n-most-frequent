@@ -109,7 +109,7 @@ Results are returned in the following JSON format:
 ## Unit test:
 This project has unit test using jest.
 
-To run the unit test, install jest with:
+To install jest as a dev dependency, run:
     
     $ npm install --save-dev jest
 
