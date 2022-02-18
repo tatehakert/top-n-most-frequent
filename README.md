@@ -1,6 +1,6 @@
 # top-n-most-frequent
 
-A nice project with a nice description
+Node API that accepts a text file and an integer N and returns the top N most frequent words and their frequencies.
 
 ---
 ## Requirements
@@ -18,11 +18,29 @@ This project has been tested with Node v15.0.1
 
 The app comes pre-configured, but the following paramaters can be updated for further testing:
 
+    portNumber (top of index.js file) --> changes the default port number
     maxMB (top of index.js file) --> limits the maximum allowed file size
-
-## Running the project
+    
+## Running the app
 From within the project folder, run:
     $ node index.js
+
+### Using the app
+
+#### From the browser
+Navigate to http://localhost:8080 to view the html upload form.
+
+    Choose a file, enter an "N" value, and click submit. The results will display in the browser in JSON format.
+
+#### Make a POST request
+You can also interact with the server by submitting a POST request to http://localhost:8080/submitForm
+
+    The "/submitForm" route accepts the following form fields:
+    {
+        "filetoupload": {file attachment},
+        "nVal": {number [1-k]}
+    }
+        
 
 
 
