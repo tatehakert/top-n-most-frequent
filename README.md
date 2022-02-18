@@ -110,10 +110,13 @@ Results are returned in the following JSON format:
 This project has unit test using jest.
 
 To run the unit test, install jest with:
-    $ npm install --save-dev jest
-Then run the test with:
-    $ npm test
     
+    $ npm install --save-dev jest
+
+Then run the test with:
+    
+    $ npm test
+
 ## Improvements/Potential Issues
 
 - If the text in the stream chunk does not have any spaces, BufferManager will assume possible overflow and will search the buffer for the a delimiter to split on. Since there are no spaces (delimiters), BufferManager will instead push the entire buffer into the overflow buffer (to be processed on the next iteration). If the subsequent chunks also lack delimiters, the process will repeat and it will continue to push each chunk onto the overflow buffer. This will result in the entire string being processed AFTER all the data has been recieved. This is an issue because it blocks the app from being able to procees incoming data without saving it first. One solution would be to setup a max buffer size so that an error is returned before a single request starts using too much memory.
