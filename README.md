@@ -2,10 +2,11 @@
 
 Node API that accepts a text file and an integer N and returns the top N most frequent words and their frequencies.
 
+
 ---
 ## Requirements
 
-For development, you will only need Node.js and npm installed in your environement.
+For development, you will need Node.js and npm installed in your environement.
 This project has been tested with Node v15.0.1
 
 ## Install
@@ -73,7 +74,7 @@ The BufferManager class accepts the data buffer for each incoming chunk and retu
         WordIndex.getMostFrequentN() returns the top-N most frequent words and their frequencies in JSON format
 
 ## Assumptions
-### word format
+### "Word" Format
 For this project, the definition of a word needs to be clearly defined to get the expected results.
 The following process ignores the possibility of an incomplete string (due bytes of a word overflowing between chunks), 
  - Split the string into an array using a regex pattern for spaces/newLines/carrigeReturns as the delimiter.
@@ -84,7 +85,7 @@ The following process ignores the possibility of an incomplete string (due bytes
     - IF the result is not an empty string --> add it to the index
 
 
-### results format
+### Results Format
 Words are sorted by their frequency in decreasing order (sorted alphabetically for words with the same frequency).
 Only the top N results are returned.
 
@@ -98,9 +99,21 @@ Results are returned in the following JSON format:
     }
 
 
+## Example
+### testCase.txt
+    Figet ex inuado resonantia. Certaveroque suaderesque metas exspectabas et nefastosque bellumque, usurparer ducamque liburnorumque et coniungisque loquaris sisque a ab meminisseque aut tetragonum ob putavistique.
+### Response
+    {"frequencies":[{"word":"et","count":2},{"word":"a","count":1},{"word":"ab","count":1}]}
 
 
+## Unit test:
+This project has unit test using jest.
 
+To run the unit test, install jest with:
+    $ npm install --save-dev jest
+Then run the test with:
+    $ npm test
+    
 ## Improvements/Potential Issues
 
 - If the text in the stream chunk does not have any spaces, BufferManager will assume possible overflow and will search the buffer for the a delimiter to split on. Since there are no spaces (delimiters), BufferManager will instead push the entire buffer into the overflow buffer (to be processed on the next iteration). If the subsequent chunks also lack delimiters, the process will repeat and it will continue to push each chunk onto the overflow buffer. This will result in the entire string being processed AFTER all the data has been recieved. This is an issue because it blocks the app from being able to procees incoming data without saving it first. One solution would be to setup a max buffer size so that an error is returned before a single request starts using too much memory.
