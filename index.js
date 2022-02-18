@@ -22,7 +22,6 @@ app.post("/submitForm", function(req,res) {
     console.log("POST: /submitForm")
 
     //WordIndex instance maintains a dictionary containing each unique word and its frequency
-    //  -  WordIndex.processString() accepts a string and counts the frequency of each word --> stored in WordIndex.dict
     let wordIndex = new WordIndex();
 
     //BufferManager instance accepts the incoming buffer data (chunk) and returns a text string 
@@ -54,14 +53,8 @@ app.post("/submitForm", function(req,res) {
 
         
         file.on('data', (data) => { //runs for each chunk of file data that is received from the request
-            //wordIndex.processString3(bufferManager.getStringFromBufferData(data))
-            //let words = bufferManager.getWordsFromBufferData(data)
-            //console.log(words)
-            //console.log(`got ${data.length} bytes`)
             wordIndex.processWords(bufferManager.getWordsFromBufferData(data))
-
         }).on('close', () => {      //if there was 'possible' overflow from final data chunk, we now need to process it
-            //wordIndex.processString3(bufferManager.getOverflowString())
             wordIndex.processWords(bufferManager.getWordsFromOverflowBuffer())
             console.log(`File ${name} finished stream`)
         })
