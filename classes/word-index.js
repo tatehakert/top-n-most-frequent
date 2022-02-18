@@ -24,45 +24,17 @@ class WordIndex{
         }
     }
 
-    processString3(string){
-        string = stringHelper.replaceNewLines(string)
-
-        stringHelper.splitIntoWordArray(string).forEach((word) => {
+    processWords(words){
+        words.forEach((word) => {
             this.addWordToIndex(stringHelper.formatWord(word))
         })
     }
 
-    // processString2(string){
+    // processString3(string){
     //     string = stringHelper.replaceNewLines(string)
+
     //     stringHelper.splitIntoWordArray(string).forEach((word) => {
-    //         word = stringHelper.formatWord(word)
-    //         if(word !== ""){               //ignore empty strings 
-    //             if(word in this.dict){ 
-    //                 this.dict[word]++      //if word is in the index --> increment it's count
-    //             }else{
-    //                 this.uniqueWordCount++
-    //                 this.dict[word] = 1    //new word --> add to index with count == 1
-    //             }
-    //         }
-    //     })
-    // }
-
-    // processString(string){
-    //     let newLinesReplaced = string.replace(/\n+/g, " ");   //replace newlines with " "
-    //     let wordArray = newLinesReplaced.split(" ")           //split the string into an array of words on " "
-        
-    //     wordArray.forEach((word) => {
-    //         //format the word by removing all non-alphanumeric characters --> toLowerCase()
-    //         let formattedWord = word.replace(/[^A-Za-z0-9]/g, "").toLowerCase();
-
-    //         if(formattedWord !== ""){               //ignore empty strings 
-    //             if(formattedWord in this.dict){ 
-    //                 this.dict[formattedWord]++      //if word is in the index --> increment it's count
-    //             }else{
-    //                 this.uniqueWordCount++
-    //                 this.dict[formattedWord] = 1    //new word --> add to index with count == 1
-    //             }
-    //         }
+    //         this.addWordToIndex(stringHelper.formatWord(word))
     //     })
     // }
 
