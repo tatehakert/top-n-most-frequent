@@ -31,26 +31,33 @@ For large file streams, data is split into chunks and each chunk is processed by
     }
 
     getStringFromBufferData(buff){
-        //if there is a possibleOverflow from the last chunk, --> add it to the beginning of the new chunk
+        //check for possibleOverflow from the previous chunk, --> add it to the beginning of the new chunk
         if(this.possibleOverflowBuffer.length > 0){
             let totalLength = this.possibleOverflowBuffer.length + buff.length
             buff = Buffer.concat([this.possibleOverflowBuffer, buff], totalLength)
             this.possibleOverflowBuffer = []
         }
-        //check for a possible overflow at the end of the new chunk buffer
-            //if the last byte is not a space char (hex: 20) --> we have a possible overflow
-                //find the last index of a space char (hex: 20) and update possibleOverflowBuffer to buff.slice(index)
-                //update current data buffer to buff.slice(0, index)
-        let sIndex = buff.length-1
-        while(sIndex > 0 && buff[sIndex].toString(16) !== "20"){
-            sIndex--
-        }
-        if(sIndex != buff.length-1){ //last char was NOT a space --> possible overflow
-            this.possibleOverflowBuffer = buff.slice(sIndex)
-            buff = buff.slice(0,sIndex)
+
+        //check for a possible overflow at the end of the new chunk buffer        
+        let dIndex = this.findLastDelimiterIndex(buff)
+
+        if(dIndex != buff.length-1){ 
+            //last byte is not a space (hex: 20) or newline (hex: 0a) --> we have a possible overflow
+            //  - update possibleOverflowBuffer to buff.slice(dIndex)
+            //  - update current data buffer to buff.slice(0, dIndex)
+            this.possibleOverflowBuffer = buff.slice(dIndex)
+            buff = buff.slice(0,dIndex)
         }
 
         return buff.toString()
+    }
+
+    findLastDelimiterIndex(buff){   //find the last occurrence space char (hex: 20) or newline (hex: 0a)
+        let dIndex = buff.length-1
+        while(dIndex > 0 && !["20", "a"].includes(buff[dIndex].toString(16))){
+            dIndex--
+        }
+        return dIndex
     }
 
     getOverflowString(){

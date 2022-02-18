@@ -38,7 +38,12 @@ app.post("/submitForm", function(req,res) {
     
     bb.on('file', (name, file, info) => {
 
-        //send an error if the file size is greater than 1GB
+        //send an error if the incorrect form file name was used
+        if(name != "filetoupload"){
+            res.writeHead(400, { Connection: 'close', Location: '/' });
+            res.end(`Error processing request: Form file should be named \"filetoupload\"`)
+        }
+        //send an error if the file size is greater than 1GB 
         if(req.headers["content-length"] > maxFileBytes){
             res.writeHead(400, { Connection: 'close', Location: '/' });
             res.end(`Error processing request: File size cannot be larger than ${maxMB}MB `)
@@ -47,14 +52,15 @@ app.post("/submitForm", function(req,res) {
         const {filename, encoding, mimeType} = info;
         console.log(`File [${name}]: filename: %j, encoding: %j, mimeType: %j`, filename, encoding, mimeType);
 
-        //file.on('data', (data) => {//}) runs for each chunk of file data that is received from the request
-        file.on('data', (data) => {
-            wordIndex.processString(bufferManager.getStringFromBufferData(data))
-        }).on('close', () => {
-            //if there was 'possible' overflow from final data chunk, we now need to process it
-            wordIndex.processString(bufferManager.getOverflowString())
+        
+        file.on('data', (data) => { //runs for each chunk of file data that is received from the request
+            wordIndex.processString3(bufferManager.getStringFromBufferData(data))
+
+        }).on('close', () => {      //if there was 'possible' overflow from final data chunk, we now need to process it
+            wordIndex.processString3(bufferManager.getOverflowString())
             console.log(`File ${name} finished stream`)
         })
+
     });
 
 
