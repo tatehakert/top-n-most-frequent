@@ -23,6 +23,7 @@ The app comes pre-configured, but the following paramaters can be updated for fu
     
 ## Running the app
 From within the project folder, run:
+    
     $ node index.js
 
 ### Using the app
@@ -40,26 +41,17 @@ You can also interact with the server by submitting a POST request to http://loc
         "filetoupload": {file attachment},
         "nVal": {number [1-k]}
     }
-        
 
+## Procedure
 
+This app uses busboy to process the incoming file stream data without having to save it first. For large file streams, data is split into chunks and each chunk is processed by busboy's file.on('data', (data) => {}) handler.
 
-/*
-For large file streams, data is split into chunks and each chunk is processed by busboy's file.on('data', (data) => {}) function
-    
-    It is likely that a chunk of data will end in the middle of a word in the text file.
-    Only if the last character in the chunk is a " " (space) can we verify that there is no overflow  
-    If we cannot verify the overflow status, the last "word" in the chunk can only be indexed 
-    by pre-pending the "possibleOverflow" word to the following chunk 
-        --> Ex: {"hello worl"}, {"d!"} ==> {"hello"}, {"world!"}
-    
-    If the last character is a " " (space):
-        --> there is no overflow (verified)
+The BufferManager class accepts the data buffer for each incoming chunk and returns an array of unformatted "words". The WordIndex class accepts the array of words, formats them, and increments the word's frequency in WordIndex class instance. 
 
-    If the last character is NOT a " " (space):
-        --> find the last index of a space character in the buffer
-        --> update possibleOverflowBuffer to equal buffer data from the index of the last " " to the end of the buffer
-        --> slice buffer to buffer[0, spaceIndex]
+## Classes
+
+### BufferManager Class
+    - Manages incoming chunks of data to make sure that sequential chunks are connected before extracting "words"
     
     When beginning to process a new chunk of buffer data, we first need to check if there is 
     a possibleOverflow from the previous chunk.
@@ -67,5 +59,18 @@ For large file streams, data is split into chunks and each chunk is processed by
         If not      --> continue normal buffer processing
 
     After checking for a possibleOverflow on the previous chunk, we then need to check if 
-    the current chunk has possibleOverflow, and update the possibleOverflowBuffer if so
-*/
+    the current chunk has possibleOverflow, and update the possibleOverflowBuffer if so (to be checked on next iteration)
+
+### WordIndex Class
+    - Manages frequency count of each unique word in the data stream
+
+    This class contains a dictionary containing each unique word that is encountered. If a new word is encountered, it is added to the dictionary as a (key, value) pair with key==word and value==frequency
+
+    When the entire stream has finished processing, WordIndex.getMostFrequentN() returns the top-N most frequent words and their frequencies in JSON format
+
+## Improvements/Potential Issues
+
+- If the text in the stream chunk does not have any spaces, BufferManager will assume possible overflow and will search the buffer for the a delimiter to split on. Since there are no spaces (delimiters), BufferManager will instead push the entire buffer into the overflow buffer (to be processed on the next iteration). If the subsequent chunks also lack delimiters, the process will repeat and it will continue to push each chunk onto the overflow buffer. This will result in the entire string being processed AFTER all the data has been recieved. This is an issue because it blocks the app from being able to procees incoming data without saving it first. One solution would be to setup a max buffer size so that an error is returned before a single request starts using too much memory.
+
+- Need to do more test to determine if the BufferManager class can handle overflow of multi-byte characters 
+
