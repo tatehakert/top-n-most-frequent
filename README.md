@@ -46,7 +46,7 @@ You can also interact with the server by submitting a POST request to http://loc
 
 This app uses busboy to process the incoming file stream data without having to save it first. For large file streams, data is split into chunks and each chunk is processed by busboy's file.on('data', (data) => {}) handler.
 
-The BufferManager class accepts the data buffer for each incoming chunk and returns an array of unformatted "words". The WordIndex class accepts the array of words, formats them, and increments the word's frequency in WordIndex class instance. 
+The BufferManager class accepts the data buffer for each incoming chunk and returns an array of unformatted "words". The WordIndex class accepts the array of words, formats them, and increments the word's frequency in the WordIndex class instance. 
 
 ## Classes
 
@@ -64,13 +64,46 @@ The BufferManager class accepts the data buffer for each incoming chunk and retu
 ### WordIndex Class
     - Manages frequency count of each unique word in the data stream
 
-    This class contains a dictionary containing each unique word that is encountered. If a new word is encountered, it is added to the dictionary as a (key, value) pair with key==word and value==frequency
+    This class contains a dictionary containing each unique word that is encountered. 
+    If a new word is encountered, it is added to the dictionary with a frequency of 1
+    If an old word is encountered, its frequency is incremented in the dictionary
 
-    When the entire stream has finished processing, WordIndex.getMostFrequentN() returns the top-N most frequent words and their frequencies in JSON format
+    When the entire stream has finished processing:
+
+        WordIndex.getMostFrequentN() returns the top-N most frequent words and their frequencies in JSON format
+
+## Assumptions
+### word format
+For this project, the definition of a word needs to be clearly defined to get the expected results.
+The following process ignores the possibility of an incomplete string (due bytes of a word overflowing between chunks), 
+ - Split the string into an array using a regex pattern for spaces/newLines/carrigeReturns as the delimiter.
+    - the result is an array of unformatted words (and empty strings) that need to be filtered and processed
+ - For each word:
+    - remove any non-alphanumeric characters
+    - make it lowercase
+    - IF the result is not an empty string --> add it to the index
+
+
+### results format
+Words are sorted by their frequency in decreasing order (sorted alphabetically for words with the same frequency).
+Only the top N results are returned.
+
+Results are returned in the following JSON format:
+
+    {
+        "frequencies": [
+            {"word": "example1", "count": 5},
+            {"word": "example2", "count": 2},
+        ]
+    }
+
+
+
+
 
 ## Improvements/Potential Issues
 
 - If the text in the stream chunk does not have any spaces, BufferManager will assume possible overflow and will search the buffer for the a delimiter to split on. Since there are no spaces (delimiters), BufferManager will instead push the entire buffer into the overflow buffer (to be processed on the next iteration). If the subsequent chunks also lack delimiters, the process will repeat and it will continue to push each chunk onto the overflow buffer. This will result in the entire string being processed AFTER all the data has been recieved. This is an issue because it blocks the app from being able to procees incoming data without saving it first. One solution would be to setup a max buffer size so that an error is returned before a single request starts using too much memory.
 
-- Need to do more test to determine if the BufferManager class can handle overflow of multi-byte characters 
+- Need to do more test to determine if the BufferManager class can detect/handle overflow of multi-byte characters 
 
